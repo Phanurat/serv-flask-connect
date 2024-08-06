@@ -4,7 +4,7 @@ import socket
 server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
 # กำหนด host และ port
-host = '192.168.31.95'
+host = '192.168.31.248'
 port = 12345
 
 # ผูก socket กับ host และ port
