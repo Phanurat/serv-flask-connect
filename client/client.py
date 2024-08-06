@@ -1,15 +1,13 @@
 import requests
 
-url = 'http://192.168.31.95:5000/run'
+url = 'http://192.168.31.95:5000/run'  # แก้ไขไอพีแอดเดรสให้ตรงกับ server
 script_name = 'main.py'  # ชื่อไฟล์ Python ที่ต้องการให้ server รัน
 
-data = {
-    'script_name': script_name
-}
+data = {'script_name': script_name}
 
-response = requests.post(url, json=data)
-
-if response.status_code == 200:
+try:
+    response = requests.post(url, json=data)
+    response.raise_for_status()  # ตรวจสอบสถานะการตอบกลับ
     result = response.json()
     if result['success']:
         print('Output from script:')
@@ -17,5 +15,5 @@ if response.status_code == 200:
     else:
         print('Error running script:')
         print(result['error'])
-else:
-    print('Failed to communicate with server')
+except requests.exceptions.RequestException as e:
+    print(f'Failed to communicate with server: {e}')
