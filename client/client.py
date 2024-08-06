@@ -1,7 +1,7 @@
 import requests
 
-url = 'http://<server-ip>:5000/run'
-script_name = 'test_script.py'  # ชื่อไฟล์ Python ที่ต้องการให้ server รัน
+url = 'http://192.168.31.95:5000/run'
+script_name = 'main.py'  # ชื่อไฟล์ Python ที่ต้องการให้ server รัน
 
 data = {
     'script_name': script_name

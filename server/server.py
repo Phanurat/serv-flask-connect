@@ -1,5 +1,6 @@
 from flask import Flask, request, jsonify
 import subprocess
+import os
 
 app = Flask(__name__)
 
@@ -7,9 +8,16 @@ app = Flask(__name__)
 def run_script():
     data = request.get_json()
     script_name = data.get('script_name')
-    
+    script_path = os.path.join(os.path.dirname(__file__), script_name)
+
+    if not os.path.isfile(script_path):
+        return jsonify({
+            'success': False,
+            'error': f'Script {script_name} not found'
+        }), 400
+
     try:
-        result = subprocess.run(['python', script_name], capture_output=True, text=True, check=True)
+        result = subprocess.run(['python', script_path], capture_output=True, text=True, check=True)
         return jsonify({
             'success': True,
             'output': result.stdout
