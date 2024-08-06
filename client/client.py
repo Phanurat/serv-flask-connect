@@ -1,19 +1,18 @@
-import requests
+import socket
 
-url = 'http://192.168.31.95:5000/run'  # แก้ไขไอพีแอดเดรสให้ตรงกับ server
-script_name = 'main.py'  # ชื่อไฟล์ Python ที่ต้องการให้ server รัน
+# สร้าง socket object
+client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
-data = {'script_name': script_name}
+# กำหนด host และ port ของ server
+host = '192.168.31.95'
+port = 12345
 
-try:
-    response = requests.post(url, json=data)
-    response.raise_for_status()  # ตรวจสอบสถานะการตอบกลับ
-    result = response.json()
-    if result['success']:
-        print('Output from script:')
-        print(result['output'])
-    else:
-        print('Error running script:')
-        print(result['error'])
-except requests.exceptions.RequestException as e:
-    print(f'Failed to communicate with server: {e}')
+# เชื่อมต่อไปยัง server
+client_socket.connect((host, port))
+
+# รับข้อมูลจาก server
+message = client_socket.recv(1024)
+print(message.decode('utf-8'))
+
+# ปิดการเชื่อมต่อ
+client_socket.close()

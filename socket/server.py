@@ -1,18 +1,26 @@
 import socket
 
 # สร้าง socket object
-client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
-# กำหนด host และ port ของ server
+# กำหนด host และ port
 host = '192.168.31.95'
 port = 12345
 
-# เชื่อมต่อไปยัง server
-client_socket.connect((host, port))
+# ผูก socket กับ host และ port
+server_socket.bind((host, port))
 
-# รับข้อมูลจาก server
-message = client_socket.recv(1024)
-print(message.decode('utf-8'))
+# ฟังการเชื่อมต่อ
+server_socket.listen(5)
+print(f"Server listening on {host}:{port}")
 
-# ปิดการเชื่อมต่อ
-client_socket.close()
+while True:
+    # ยอมรับการเชื่อมต่อจาก client
+    client_socket, addr = server_socket.accept()
+    print(f"Got connection from {addr}")
+
+    # ส่งข้อความไปยัง client
+    client_socket.send(b"Thank you for connecting")
+    
+    # ปิดการเชื่อมต่อกับ client
+    client_socket.close()
