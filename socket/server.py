@@ -1,26 +1,11 @@
-import socket
+import asyncio
+import websockets
 
-# สร้าง socket object
-server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+async def echo(websocket, path):
+    async for message in websocket:
+        await websocket.send(message)
 
-# กำหนด host และ port
-host = '192.168.31.95'
-port = 12345
+start_server = websockets.serve(echo, "0.0.0.0", 8765)
 
-# ผูก socket กับ host และ port
-server_socket.bind((host, port))
-
-# ฟังการเชื่อมต่อ
-server_socket.listen(5)
-print(f"Server listening on {host}:{port}")
-
-while True:
-    # ยอมรับการเชื่อมต่อจาก client
-    client_socket, addr = server_socket.accept()
-    print(f"Got connection from {addr}")
-
-    # ส่งข้อความไปยัง client
-    client_socket.send(b"Thank you for connecting")
-    
-    # ปิดการเชื่อมต่อกับ client
-    client_socket.close()
+asyncio.get_event_loop().run_until_complete(start_server)
+asyncio.get_event_loop().run_forever()
